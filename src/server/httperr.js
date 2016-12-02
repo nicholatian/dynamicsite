@@ -1,8 +1,6 @@
 #!/usr/bin/env node
 /*****************************************************************************\
  *                                                                           *
- *                         FANTASTIC  OCTO SUCCOTASH                         *
- *                                                                           *
  *                    Copyright © 2016 Alexander Nicholi.                    *
  *         Released under the MIT License;  see LICENSE for details.         *
  *                                                                           *
@@ -31,15 +29,25 @@ const getBackground = (code) => {
     return backgrounds[code.toString()]
 };
 
-var exports = module.exports = (res, code) => {
-    let shortDesc = getShortDesc(code)
-    res.status(code).send(clientsrv.getPage('httperr.hbs', ['common.scss',
-        path.join('err', code + '.scss')], ['common.js'], {
-            sitename:  'Untitled Website',
-            pagetitle: code + ': ' + shortDesc,
-            num:       code,
-            shortdesc: shortDesc,
-            longdesc:  getLongDesc(code),
-            pagedesc:  'A brief description'
-        }))
+module.exports = (res, code) => {
+    const callback = (err, data) => {
+        if(err) {
+            console.error(err.message)
+        }
+        res.status(code).send(data)
+    };
+    const shortDesc = getShortDesc(code)
+    clientsrv.getPage('httperr.hbs', [
+        'common.scss',
+        path.join('err', code + '.scss')
+    ], [
+        'common.js'
+    ], {
+        sitename:  'Untitled Website',
+        pagetitle: code + ': ' + shortDesc,
+        num:       code,
+        shortdesc: shortDesc,
+        longdesc:  getLongDesc(code),
+        pagedesc:  'A brief description'
+    }, callback)
 };

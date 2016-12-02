@@ -1,8 +1,6 @@
 #!/usr/bin/env node
 /*****************************************************************************\
  *                                                                           *
- *                         FANTASTIC  OCTO SUCCOTASH                         *
- *                                                                           *
  *                    Copyright © 2016 Alexander Nicholi.                    *
  *         Released under the MIT License;  see LICENSE for details.         *
  *                                                                           *
@@ -19,42 +17,59 @@ const path    = require('path')
 const uglify  = require('uglify-js').minify
 
 // Require our JS
-const config = require('./config')
+const config   = require('./config')
+const regparts = require('../server/regparts')
 
 var exports = module.exports = {}
 
-exports.compileMarkup = (relPath, locals) => {
+exports.compileMarkup = (relPath, locals, callback) => {
+    const processHbars = (err, data) => {
+        if(err) {
+            callback(err, data)
+            return
+        }
+        regparts.registerAll((err) => {
+            if(err) {
+                callback(err)
+                return
+            }
+            let template = hbars.compile(data, {
+                noEscape: true,
+                strict: true
+            })
+            callback(null, htmlmin(template(locals), {
+                caseSensitive: true,
+                collapseBooleanAttributes: true,
+                collapseWhitespace: true,
+                collapseInlineTagWhitespace: true,
+                ignoreCustomComments: [],
+                minifyURLs: true,
+                preventAttributesEscaping: false,
+                quoteCharacter: '"',
+                removeAttributeQuotes: true,
+                removeComments: true,
+                removeRedundantAttributes: true,
+                removeScriptTypeAttributes: true,
+                removeStyleLinkTypeAttributes: true,
+                sortAttributes: true,
+                sortClassName: true,
+                useShortDoctype: true
+            }))
+            regparts.unregisterAll()
+        })
+    };
     let fullPath = path.join(config.dir.markupSource, relPath)
-    let template = hbars.compile(fs.readFileSync(fullPath, 'utf8'), {
-        noEscape: true,
-        strict: true
-    })
-    return htmlmin(template(locals), {
-        caseSensitive: true,
-        collapseBooleanAttributes: true,
-        collapseWhitespace: true,
-        collapseInlineTagWhitespace: true,
-        ignoreCustomComments: [],
-        minifyURLs: true,
-        preventAttributesEscaping: false,
-        quoteCharacter: '"',
-        removeAttributeQuotes: true,
-        removeComments: true,
-        removeRedundantAttributes: true,
-        removeScriptTypeAttributes: true,
-        removeStyleLinkTypeAttributes: true,
-        sortAttributes: true,
-        sortClassName: true,
-        useShortDoctype: true
-    })
+    fs.readFile(fullPath, 'utf8', processHbars)
 };
 
-exports.compileStyle = (relPath) => {
-    return sass.renderSync({
+exports.compileStyle = (relPath, callback) => {
+    sass.render({
         file: path.join(config.dir.styleSource, relPath),
         outputStyle: 'compressed',
         precision: 14
-    }).css
+    }, (err, obj) => {
+        callback(err, obj.css)
+    })
 };
 
 exports.compileCode = (relPath) => {
@@ -69,7 +84,7 @@ exports.compileCode = (relPath) => {
             indent_level  : 4,     // Beautify only
             quote_keys    : false,
             space_colon   : false,
-            ascii_only    : false, 
+            ascii_only    : false,
             inline_script : false, // escape "</script"?
             width         : 80,    // Beautify only
             max_line_len  : 32768, // Non-beautified
@@ -79,13 +94,21 @@ exports.compileCode = (relPath) => {
             comments      : false,
             semicolons    : true
         },
-        parse: { strict: true }
+        parse: {
+            strict: true
+        }
     }).code
 };
 
-exports.compilePage = (markupPath, style, code, markupLocals) => {
+exports.compilePage = (markupPath, style, code, markupLocals, callback) => {
     let newMarkupLocals   = markupLocals
     newMarkupLocals.style = style
     newMarkupLocals.code  = code
-    return exports.compileMarkup(markupPath, newMarkupLocals)
+    exports.compileMarkup(markupPath, newMarkupLocals, (err, data) => {
+        if(data.match(/^ *$/)) {
+            callback(new Error('Generated markup is empty'), data)
+            return
+        }
+        callback(null, data)
+    })
 };
