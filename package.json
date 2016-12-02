@@ -1,19 +1,20 @@
 {
-    "name": "fantastic-octo-succotash",
+    "name": "dynamicsite",
     "version": "0.0.0",
-    "description": "Database interface in cyberspace.",
+    "description": "A web server that uses Express, Handlebars, SASS and JavaScript to serve dynamic web pages.",
     "main": "index.js",
     "scripts": {
         "start": "node index.js"
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/nicholatian/fantastic-octo-succotash.git"
+        "url": "git+https://github.com/nicholatian/dynamicsite.git"
     },
     "keywords": [
         "database",
         "website",
-        "ecommerce",
+        "generic",
+        "template",
         "api"
     ],
     "author": "Alexander Nicholi",
