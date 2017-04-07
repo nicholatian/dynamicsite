@@ -18,7 +18,7 @@ const express = require('express')
 const colour  = require('colour')
 
 const server = express()
-const port   = 882
+const port   = 3000
 
 server.use('/', require('./router/main'))
 
