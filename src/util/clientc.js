@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 /*****************************************************************************\
  *                                                                           *
+ *                      TRINITY SOFTWARE - COMPANY SITE                      *
+ *                                                                           *
  *                    Copyright © 2016 Alexander Nicholi.                    *
  *         Released under the MIT License;  see LICENSE for details.         *
  *                                                                           *
@@ -68,6 +70,9 @@ exports.compileStyle = (relPath, callback) => {
         outputStyle: 'compressed',
         precision: 14
     }, (err, obj) => {
+        if(err) {
+            callback(err, null)
+        }
         callback(err, obj.css)
     })
 };
@@ -105,6 +110,10 @@ exports.compilePage = (markupPath, style, code, markupLocals, callback) => {
     newMarkupLocals.style = style
     newMarkupLocals.code  = code
     exports.compileMarkup(markupPath, newMarkupLocals, (err, data) => {
+        if(err) {
+            callback(err, null)
+            return
+        }
         if(data.match(/^ *$/)) {
             callback(new Error('Generated markup is empty'), data)
             return

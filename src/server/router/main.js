@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 /*****************************************************************************\
  *                                                                           *
+ *                      TRINITY SOFTWARE - COMPANY SITE                      *
+ *                                                                           *
  *                    Copyright © 2016 Alexander Nicholi.                    *
  *         Released under the MIT License;  see LICENSE for details.         *
  *                                                                           *
@@ -8,11 +10,11 @@
 
 'use strict'
 
-// Require our node modules
+// Require our Node modules
 const express = require('express')
 
-// Require our JS
-const httpErr = require('../httperr')
+// Require our JS(ON)
+const httpErr   = require('../httperr')
 
 var router = module.exports = express.Router({
     caseSensitive: true,
@@ -20,5 +22,5 @@ var router = module.exports = express.Router({
 })
 
 router.all(/^\/.*$/, (req, res) => {
-    httpErr(res, 501)
+    httpErr(res, 404)
 })

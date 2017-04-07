@@ -1,4 +1,4 @@
-# DynamicSite
+# Fantastic Octo-Succotash
 
-A web server that uses Express, Handlebars, SASS and JavaScript to serve
-dynamic web pages.
+Website written in JavaScript/SASS/Handlebars for vw2172995vw on Freelancer.
+Created by Alexander Nicholi.

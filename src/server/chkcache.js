@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 /*****************************************************************************\
  *                                                                           *
+ *                      TRINITY SOFTWARE - COMPANY SITE                      *
+ *                                                                           *
  *                    Copyright © 2016 Alexander Nicholi.                    *
  *         Released under the MIT License;  see LICENSE for details.         *
  *                                                                           *
@@ -18,14 +20,12 @@ const config = require('../util/config')
 module.exports = (type, sourceName, cacheName, callback) => {
     const statCache = (err, stats) => {
         if(err) {
-            console.error(err.message)
-            callback(null, false)
+            callback(err, false)
             return
         }
         const compareTimes = (err2, stats2) => {
             if(err2) {
-                console.error(err2.message)
-                callback(null, false)
+                callback(err, false)
                 return
             }
             if(stats.mtime.getTime() > stats2.mtime.getTime()) {

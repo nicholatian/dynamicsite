@@ -1,8 +1,10 @@
 #!/usr/bin/env node
 /*****************************************************************************\
  *                                                                           *
+ *                      TRINITY SOFTWARE - COMPANY SITE                      *
+ *                                                                           *
  *                    Copyright © 2016 Alexander Nicholi.                    *
- *         Released under the MIT License;  see LICENSE for details.         *
+ *         Released under the MIT License;  see LICENSE for details.         * 
  *                                                                           *
 \*****************************************************************************/
 
@@ -38,6 +40,8 @@ module.exports = (markupPath, stylePaths, codePaths, markupLocals, callback) =>
             callback(err, markup)
         })
     }, (err) => {
+        callback(err)
+    }).catch(err => {
         callback(err)
     })
 };

@@ -1,0 +1,16 @@
+{
+    "color": true,
+    "terse": true,
+    "json": true,
+    "ass": true,
+    "bitwise": true,
+    "continue": true,
+    "devel": true,
+    "indent": 4,
+    "maxlen": 80,
+    "browser": true,
+    "plusplus": true,
+    "regexp": true,
+    "todo": true,
+    "vars": true
+}

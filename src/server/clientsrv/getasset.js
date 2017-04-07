@@ -10,18 +10,10 @@
 
 'use strict'
 
-console.log('Loading modules...')
+// Require our JS
+const config = require('../../util/config')
 
-// Require our node modules
-const path    = require('path')
-const express = require('express')
-const colour  = require('colour')
-
-const server = express()
-const port   = 882
-
-server.use('/', require('./router/main'))
-
-server.listen(port, () => {
-    console.log('Server listening on port ' + port + '.')
-})
+module.exports = name => {
+    return config.cdn.protocol + '://' + config.cdn.domain +
+        config.cdn.path.perm + '/' + name
+};
